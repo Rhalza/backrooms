@@ -96,9 +96,25 @@ export class Player {
         }
 
         this.velocity.y -= 12 * dt;
-        this.position.y += this.velocity.y * dt;
+        const dy = this.velocity.y * dt;
         
+        this.position.y += dy;
+        this.updateAABB();
         this.isGrounded = false;
+
+        for (let i = 0; i < colliders.length; i++) {
+            if (this.aabb.intersectsBox(colliders[i])) {
+                if (dy < 0) {
+                    this.position.y = colliders[i].max.y;
+                    this.isGrounded = true;
+                    this.velocity.y = 0;
+                } else if (dy > 0) {
+                    this.position.y = colliders[i].min.y - this.height - 0.001;
+                    this.velocity.y = 0;
+                }
+                this.updateAABB();
+            }
+        }
 
         if (this.position.y <= 0) {
             this.position.y = 0;
