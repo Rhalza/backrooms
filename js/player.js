@@ -71,8 +71,8 @@ export class Player {
             this.updateAABB();
             for (let i = 0; i < colliders.length; i++) {
                 if (this.aabb.intersectsBox(colliders[i])) {
-                    if (dx > 0) this.position.x = colliders[i].min.x - this.radius;
-                    else if (dx < 0) this.position.x = colliders[i].max.x + this.radius;
+                    if (dx > 0) this.position.x = colliders[i].min.x - this.radius - 0.001;
+                    else this.position.x = colliders[i].max.x + this.radius + 0.001;
                     this.updateAABB();
                 }
             }
@@ -84,8 +84,8 @@ export class Player {
             this.updateAABB();
             for (let i = 0; i < colliders.length; i++) {
                 if (this.aabb.intersectsBox(colliders[i])) {
-                    if (dz > 0) this.position.z = colliders[i].min.z - this.radius;
-                    else if (dz < 0) this.position.z = colliders[i].max.z + this.radius;
+                    if (dz > 0) this.position.z = colliders[i].min.z - this.radius - 0.001;
+                    else this.position.z = colliders[i].max.z + this.radius + 0.001;
                     this.updateAABB();
                 }
             }
@@ -96,10 +96,7 @@ export class Player {
         }
 
         this.velocity.y -= 12 * dt;
-        const dy = this.velocity.y * dt;
-        
-        this.position.y += dy;
-        this.updateAABB();
+        this.position.y += this.velocity.y * dt;
         
         this.isGrounded = false;
 
@@ -107,15 +104,12 @@ export class Player {
             this.position.y = 0;
             this.isGrounded = true;
             this.velocity.y = 0;
-            this.updateAABB();
-        }
-
-        if (this.position.y + this.height > 2.7) {
+        } else if (this.position.y + this.height >= 2.7) {
             this.position.y = 2.7 - this.height;
-            this.velocity.y = 0;
-            this.updateAABB();
+            this.velocity.y = Math.min(0, this.velocity.y);
         }
 
+        this.updateAABB();
         this.camera.position.set(this.position.x, this.position.y + this.height - 0.15, this.position.z);
     }
 }
