@@ -1,13 +1,13 @@
 import * as THREE from 'three';
 
-export const colliders = [];
+export const wallColliders = [];
 
 export function createWorld(scene) {
     const floorGeo = new THREE.BoxGeometry(10, 0.1, 10);
     const ceilGeo = new THREE.BoxGeometry(10, 0.1, 10);
-    const wallGeo = new THREE.BoxGeometry(2, 2.7, 2);
-    const halfGeo = new THREE.BoxGeometry(2, 1.35, 2);
-    const crawlGeo = new THREE.BoxGeometry(2, 1.8, 2);
+    const wallGeoX = new THREE.BoxGeometry(2.2, 2.7, 0.2);
+    const wallGeoZ = new THREE.BoxGeometry(0.2, 2.7, 2.2);
+    const pillarGeo = new THREE.BoxGeometry(0.2, 2.7, 0.2);
 
     const floorMat = new THREE.MeshLambertMaterial({ color: 0x5a554a });
     const ceilMat = new THREE.MeshLambertMaterial({ color: 0xd0d0b0 });
@@ -18,42 +18,39 @@ export function createWorld(scene) {
             const f = new THREE.Mesh(floorGeo, floorMat);
             f.position.set(cx * 10, -0.05, cz * 10);
             scene.add(f);
-            
-            const cBox = new THREE.Box3().setFromObject(f);
-            colliders.push(cBox);
 
             const c = new THREE.Mesh(ceilGeo, ceilMat);
             c.position.set(cx * 10, 2.75, cz * 10);
             scene.add(c);
-            
-            const cBox2 = new THREE.Box3().setFromObject(c);
-            colliders.push(cBox2);
 
             for (let bx = 0; bx < 5; bx++) {
                 for (let bz = 0; bz < 5; bz++) {
-                    if (cx === 0 && cz === 0 && bx >= 1 && bx <= 3 && bz >= 1 && bz <= 3) continue;
-
                     let wx = (cx * 10) - 4 + (bx * 2);
                     let wz = (cz * 10) - 4 + (bz * 2);
 
-                    let p = Math.abs((wx * 3 + wz * 5) % 7);
+                    if (Math.abs(wx) < 3 && Math.abs(wz) < 3) continue;
 
-                    if (p === 1) {
-                        let m = new THREE.Mesh(wallGeo, wallMat);
-                        m.position.set(wx, 1.35, wz);
+                    let hash1 = Math.abs((Math.floor(wx * 17.13) + Math.floor(wz * 31.71)) % 7);
+                    let hash2 = Math.abs((Math.floor(wx * 23.45) + Math.floor(wz * 13.89)) % 5);
+
+                    if (hash1 < 4) {
+                        let m = new THREE.Mesh(wallGeoZ, wallMat);
+                        m.position.set(wx - 1, 1.35, wz);
                         scene.add(m);
-                        colliders.push(new THREE.Box3().setFromObject(m));
-                    } else if (p === 2) {
-                        let m = new THREE.Mesh(halfGeo, wallMat);
-                        m.position.set(wx, 0.675, wz);
-                        scene.add(m);
-                        colliders.push(new THREE.Box3().setFromObject(m));
-                    } else if (p === 3) {
-                        let m = new THREE.Mesh(crawlGeo, wallMat);
-                        m.position.set(wx, 1.8, wz);
-                        scene.add(m);
-                        colliders.push(new THREE.Box3().setFromObject(m));
+                        wallColliders.push(new THREE.Box3().setFromObject(m));
                     }
+
+                    if (hash2 < 3) {
+                        let m = new THREE.Mesh(wallGeoX, wallMat);
+                        m.position.set(wx, 1.35, wz - 1);
+                        scene.add(m);
+                        wallColliders.push(new THREE.Box3().setFromObject(m));
+                    }
+
+                    let p = new THREE.Mesh(pillarGeo, wallMat);
+                    p.position.set(wx - 1, 1.35, wz - 1);
+                    scene.add(p);
+                    wallColliders.push(new THREE.Box3().setFromObject(p));
                 }
             }
         }
