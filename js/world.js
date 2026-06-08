@@ -5,9 +5,9 @@ export const colliders = [];
 export function createWorld(scene) {
     const floorGeo = new THREE.BoxGeometry(10, 0.1, 10);
     const ceilGeo = new THREE.BoxGeometry(10, 0.1, 10);
-    const wallGeo = new THREE.BoxGeometry(2, 3, 2);
-    const halfGeo = new THREE.BoxGeometry(2, 1.5, 2);
-    const crawlGeo = new THREE.BoxGeometry(2, 2, 2);
+    const wallGeo = new THREE.BoxGeometry(2, 2.7, 2);
+    const halfGeo = new THREE.BoxGeometry(2, 1.35, 2);
+    const crawlGeo = new THREE.BoxGeometry(2, 1.8, 2);
 
     const floorMat = new THREE.MeshLambertMaterial({ color: 0x5a554a });
     const ceilMat = new THREE.MeshLambertMaterial({ color: 0xd0d0b0 });
@@ -23,7 +23,7 @@ export function createWorld(scene) {
             colliders.push(cBox);
 
             const c = new THREE.Mesh(ceilGeo, ceilMat);
-            c.position.set(cx * 10, 3.05, cz * 10);
+            c.position.set(cx * 10, 2.75, cz * 10);
             scene.add(c);
             
             const cBox2 = new THREE.Box3().setFromObject(c);
@@ -40,17 +40,17 @@ export function createWorld(scene) {
 
                     if (p === 1) {
                         let m = new THREE.Mesh(wallGeo, wallMat);
-                        m.position.set(wx, 1.5, wz);
+                        m.position.set(wx, 1.35, wz);
                         scene.add(m);
                         colliders.push(new THREE.Box3().setFromObject(m));
                     } else if (p === 2) {
                         let m = new THREE.Mesh(halfGeo, wallMat);
-                        m.position.set(wx, 0.75, wz);
+                        m.position.set(wx, 0.675, wz);
                         scene.add(m);
                         colliders.push(new THREE.Box3().setFromObject(m));
                     } else if (p === 3) {
                         let m = new THREE.Mesh(crawlGeo, wallMat);
-                        m.position.set(wx, 2.0, wz);
+                        m.position.set(wx, 1.8, wz);
                         scene.add(m);
                         colliders.push(new THREE.Box3().setFromObject(m));
                     }
