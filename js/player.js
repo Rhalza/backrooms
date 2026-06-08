@@ -1,9 +1,9 @@
 import * as THREE from 'three';
 
 export class Player {
-    constructor(camera) {
+    constructor(camera, startX, startZ) {
         this.camera = camera;
-        this.position = new THREE.Vector3(0, 0, 0);
+        this.position = new THREE.Vector3(startX, 0.1, startZ);
         this.velocity = new THREE.Vector3(0, 0, 0);
         this.radius = 0.25;
         this.height = 1.8;
@@ -20,7 +20,7 @@ export class Player {
         );
     }
 
-    update(dt, input, wallColliders) {
+    update(dt, input, colliders) {
         this.yaw -= input.mouse.movementX * 0.002;
         this.pitch -= input.mouse.movementY * 0.002;
         
@@ -44,8 +44,8 @@ export class Player {
                 new THREE.Vector3(this.position.x + this.radius, this.position.y + 1.8, this.position.z + this.radius)
             );
             let blocked = false;
-            for (let i = 0; i < wallColliders.length; i++) {
-                if (standBox.intersectsBox(wallColliders[i])) {
+            for (let i = 0; i < colliders.length; i++) {
+                if (standBox.intersectsBox(colliders[i])) {
                     blocked = true;
                     break;
                 }
@@ -69,10 +69,10 @@ export class Player {
         if (dx !== 0) {
             this.position.x += dx;
             this.updateAABB();
-            for (let i = 0; i < wallColliders.length; i++) {
-                if (this.aabb.intersectsBox(wallColliders[i])) {
-                    if (dx > 0) this.position.x = wallColliders[i].min.x - this.radius;
-                    else if (dx < 0) this.position.x = wallColliders[i].max.x + this.radius;
+            for (let i = 0; i < colliders.length; i++) {
+                if (this.aabb.intersectsBox(colliders[i])) {
+                    if (dx > 0) this.position.x = colliders[i].min.x - this.radius;
+                    else if (dx < 0) this.position.x = colliders[i].max.x + this.radius;
                     this.updateAABB();
                 }
             }
@@ -82,10 +82,10 @@ export class Player {
         if (dz !== 0) {
             this.position.z += dz;
             this.updateAABB();
-            for (let i = 0; i < wallColliders.length; i++) {
-                if (this.aabb.intersectsBox(wallColliders[i])) {
-                    if (dz > 0) this.position.z = wallColliders[i].min.z - this.radius;
-                    else if (dz < 0) this.position.z = wallColliders[i].max.z + this.radius;
+            for (let i = 0; i < colliders.length; i++) {
+                if (this.aabb.intersectsBox(colliders[i])) {
+                    if (dz > 0) this.position.z = colliders[i].min.z - this.radius;
+                    else if (dz < 0) this.position.z = colliders[i].max.z + this.radius;
                     this.updateAABB();
                 }
             }
