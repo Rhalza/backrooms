@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>The Backrooms</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.160.0/build/three.module.js"
+            }
+        }
+    </script>
+    <script type="module" src="js/main.js"></script>
+</head>
+<body>
+    <div id="ui-layer">
+        <div id="crosshair">+</div>
+        <div id="mobile-controls">
+            <div id="joystick-left-zone" class="joystick-zone"></div>
+            <div id="joystick-right-zone" class="joystick-zone"></div>
+            <div id="joystick-left-base" class="joystick-base">
+                <div id="joystick-left-knob" class="joystick-knob"></div>
+            </div>
+            <div id="joystick-right-base" class="joystick-base">
+                <div id="joystick-right-knob" class="joystick-knob"></div>
+            </div>
+        </div>
+        <div id="start-menu">
+            <h1>Level 0</h1>
+            <p>Click or Tap to Start</p>
+        </div>
+    </div>
+</body>
+</html>
