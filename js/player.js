@@ -3,10 +3,10 @@ import * as THREE from 'three';
 export class Player {
     constructor(camera) {
         this.camera = camera;
-        this.position = new THREE.Vector3(0, 1.6, 0);
+        this.position = new THREE.Vector3(0, 0.1, 0);
         this.velocity = new THREE.Vector3(0, 0, 0);
         this.radius = 0.3;
-        this.height = 1.6;
+        this.height = 1.8;
         this.yaw = 0;
         this.pitch = 0;
         this.isGrounded = false;
@@ -35,13 +35,13 @@ export class Player {
 
         this.camera.rotation.set(this.pitch, this.yaw, 0);
 
-        let targetHeight = 1.6;
+        let targetHeight = 1.8;
         if (input.keys.c) {
-            targetHeight = 0.6;
+            targetHeight = 0.8;
         } else {
             const standBox = new THREE.Box3(
                 new THREE.Vector3(this.position.x - this.radius, this.position.y, this.position.z - this.radius),
-                new THREE.Vector3(this.position.x + this.radius, this.position.y + 1.6, this.position.z + this.radius)
+                new THREE.Vector3(this.position.x + this.radius, this.position.y + 1.8, this.position.z + this.radius)
             );
             let blocked = false;
             for (let i = 0; i < colliders.length; i++) {
@@ -50,7 +50,7 @@ export class Player {
                     break;
                 }
             }
-            if (blocked) targetHeight = 0.6;
+            if (blocked) targetHeight = 0.8;
         }
 
         this.height += (targetHeight - this.height) * 10 * dt;
@@ -63,7 +63,7 @@ export class Player {
 
         moveDir.applyAxisAngle(new THREE.Vector3(0, 1, 0), this.yaw);
 
-        const speed = targetHeight === 0.6 ? 2.5 : 5.0;
+        const speed = targetHeight === 0.8 ? 0.8 : 1.8;
         
         const dx = moveDir.x * speed * dt;
         this.position.x += dx;
@@ -88,7 +88,7 @@ export class Player {
         }
 
         if (this.isGrounded && input.keys.space) {
-            this.velocity.y = 5;
+            this.velocity.y = 4;
         }
 
         this.velocity.y -= 15 * dt;
@@ -111,6 +111,6 @@ export class Player {
             }
         }
 
-        this.camera.position.set(this.position.x, this.position.y + this.height - 0.2, this.position.z);
+        this.camera.position.set(this.position.x, this.position.y + this.height - 0.15, this.position.z);
     }
 }
