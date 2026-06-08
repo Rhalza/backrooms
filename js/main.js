@@ -1,5 +1,6 @@
 import * as THREE from 'three';
-import { createWorld, updateRenderDistance, activeColliders } from './world.js';
+import { createWorld, updateRenderDistance, activeColliders, ROOM_SIZE } from './world.js';
+import { MAP_CELLS, hWalls, vWalls } from './generator.js';
 import { Player } from './player.js';
 import { input, initInput } from './input.js';
 
@@ -28,7 +29,20 @@ function init() {
 
     createWorld(scene);
 
-    player = new Player(camera, 250, 250);
+    let spawnX = Math.floor(MAP_CELLS / 2);
+    let spawnZ = Math.floor(MAP_CELLS / 2);
+    while (vWalls[spawnZ * (MAP_CELLS + 1) + spawnX] || hWalls[spawnZ * MAP_CELLS + spawnX]) {
+        spawnX++;
+        if (spawnX >= MAP_CELLS) {
+            spawnX = 0;
+            spawnZ++;
+        }
+    }
+
+    const startWorldX = spawnX * ROOM_SIZE + ROOM_SIZE / 2;
+    const startWorldZ = spawnZ * ROOM_SIZE + ROOM_SIZE / 2;
+
+    player = new Player(camera, startWorldX, startWorldZ);
     updateRenderDistance(player.position);
 
     window.addEventListener('resize', onWindowResize);
