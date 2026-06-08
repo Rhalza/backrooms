@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { createWorld, colliders } from './world.js';
+import { createWorld, wallColliders } from './world.js';
 import { Player } from './player.js';
 import { input, initInput } from './input.js';
 
@@ -50,7 +50,7 @@ function animate(time) {
     lastTime = time;
 
     if (gameStarted) {
-        player.update(dt, input, colliders);
+        player.update(dt, input, wallColliders);
     }
 
     renderer.render(scene, camera);
