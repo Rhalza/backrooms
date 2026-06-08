@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { createWorld, wallColliders } from './world.js';
+import { createWorld, updateRenderDistance, activeColliders } from './world.js';
 import { Player } from './player.js';
 import { input, initInput } from './input.js';
 
@@ -28,7 +28,8 @@ function init() {
 
     createWorld(scene);
 
-    player = new Player(camera);
+    player = new Player(camera, 250, 250);
+    updateRenderDistance(player.position);
 
     window.addEventListener('resize', onWindowResize);
 
@@ -50,7 +51,8 @@ function animate(time) {
     lastTime = time;
 
     if (gameStarted) {
-        player.update(dt, input, wallColliders);
+        updateRenderDistance(player.position);
+        player.update(dt, input, activeColliders);
     }
 
     renderer.render(scene, camera);
